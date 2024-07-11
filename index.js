@@ -6,27 +6,47 @@
  */
 
 // Given Parameters
-const initialVelocity = 10000; // velocity (km/h)
-const acceleration = 3; // acceleration (m/s^2)
-const timeInSeconds = 3600; // seconds (1 hour)
-const initialDistance = 0; // distance (km)
-const remainingFuel = 5000; // remaining fuel (kg)
-const fuelBurnRate = 0.5; // fuel burn rate (kg/s)
+const initialVelocityKmH = 10000; // initial velocity in km/h
+const accelerationMs2 = 3; // acceleration in m/s^2
+const timeInSeconds = 3600; // time in seconds (1 hour)
+const initialDistanceKm = 0; // initial distance in km
+const initialFuelKg = 5000; // initial fuel in kg
+const fuelBurnRateKgS = 0.5; // fuel burn rate in kg/s
 
+// Function to convert km/h to m/s
+const convertKmHtoMS = (velocityKmH) => (velocityKmH * 1000) / 3600;
 
-const d2 = d + (vel*time) //calcultes new distance
-const rf = fbr*time //calculates remaining fuel
-const vel2 = calcNewVel(acc, vel, time) //calculates new velocity based on acceleration
+// Function to convert m/s to km/h
+const convertMStoKmH = (velocityMs) => (velocityMs * 3600) / 1000;
 
-// Pick up an error with how the function below is called and make it robust to such errors
-calcNewVel = (vel, acc, time) => { 
-  return vel + (acc*time)
-}
+// Convert initial velocity to m/s for calculations
+const initialVelocityMs = convertKmHtoMS(initialVelocityKmH);
 
-console.log(`Corrected New Velocity: ${vel2} km/h`);
-console.log(`Corrected New Distance: ${d2} km`);
-console.log(`Corrected Remaining Fuel: ${rf} kg`);
+// Calculate new distance in km
+const finalDistanceKm = initialDistanceKm + (initialVelocityKmH * (timeInSeconds / 3600));
 
+// Calculate remaining fuel in kg
+const remainingFuelKg = initialFuelKg - (fuelBurnRateKgS * timeInSeconds);
+
+// Function to calculate new velocity based on acceleration using destructuring
+const calcNewVel = ({ accelerationMs2, initialVelocityMs, timeInSeconds }) => {
+  if (typeof accelerationMs2 !== 'number' || typeof initialVelocityMs !== 'number' || typeof timeInSeconds !== 'number') {
+    throw new Error("Invalid input: Parameters should be a number.");
+  }
+  if (accelerationMs2 < 0 || initialVelocityMs < 0 || timeInSeconds < 0) {
+    throw new Error("Invalid input: Parameters should be less than 0.");
+  }
+  return initialVelocityMs + (accelerationMs2 * timeInSeconds);
+};
+
+// Calculate new velocity in m/s and convert to km/h
+const newVelocityMs = calcNewVel({ accelerationMs2, initialVelocityMs, timeInSeconds });
+const newVelocityKmH = convertMStoKmH(newVelocityMs);
+
+// Print the corrected values
+console.log(`Corrected New Velocity: ${newVelocityKmH.toFixed(2)} km/h`);
+console.log(`Corrected New Distance: ${finalDistanceKm.toFixed(2)} km`);
+console.log(`Corrected Remaining Fuel: ${remainingFuelKg.toFixed(2)} kg`);
 
 
 
