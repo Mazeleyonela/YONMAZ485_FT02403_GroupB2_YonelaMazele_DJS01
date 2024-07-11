@@ -34,7 +34,7 @@ const calcNewVel = ({ accelerationMs2, initialVelocityMs, timeInSeconds }) => {
     throw new Error("Invalid input: Parameters should be a number.");
   }
   if (accelerationMs2 < 0 || initialVelocityMs < 0 || timeInSeconds < 0) {
-    throw new Error("Invalid input: Parameters should be less than 0.");
+    throw new Error("Invalid input: Parameters should not be less than 0.");
   }
   return initialVelocityMs + (accelerationMs2 * timeInSeconds);
 };
